@@ -1,0 +1,305 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6D793FB216FA0832003A8FDA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D793FB116FA0832003A8FDA /* UIKit.framework */; };
+		6D793FB416FA0832003A8FDA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D793FB316FA0832003A8FDA /* Foundation.framework */; };
+		6D793FB616FA0832003A8FDA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D793FB516FA0832003A8FDA /* CoreGraphics.framework */; };
+		6D793FBC16FA0832003A8FDA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D793FBA16FA0832003A8FDA /* InfoPlist.strings */; };
+		6D793FBE16FA0832003A8FDA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D793FBD16FA0832003A8FDA /* main.m */; };
+		6D793FC216FA0833003A8FDA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D793FC116FA0833003A8FDA /* AppDelegate.m */; };
+		6D793FC416FA0833003A8FDA /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6D793FC316FA0833003A8FDA /* Default.png */; };
+		6D793FC616FA0833003A8FDA /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6D793FC516FA0833003A8FDA /* Default@2x.png */; };
+		6D793FC816FA0833003A8FDA /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6D793FC716FA0833003A8FDA /* Default-568h@2x.png */; };
+		6D793FCB16FA0833003A8FDA /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D793FC916FA0833003A8FDA /* MainStoryboard.storyboard */; };
+		6D793FCE16FA0833003A8FDA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D793FCD16FA0833003A8FDA /* ViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6D793FAE16FA0832003A8FDA /* reflexio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = reflexio.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D793FB116FA0832003A8FDA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6D793FB316FA0832003A8FDA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6D793FB516FA0832003A8FDA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6D793FB916FA0832003A8FDA /* reflexio-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "reflexio-Info.plist"; sourceTree = "<group>"; };
+		6D793FBB16FA0832003A8FDA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6D793FBD16FA0832003A8FDA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6D793FBF16FA0833003A8FDA /* reflexio-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "reflexio-Prefix.pch"; sourceTree = "<group>"; };
+		6D793FC016FA0833003A8FDA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		6D793FC116FA0833003A8FDA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		6D793FC316FA0833003A8FDA /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		6D793FC516FA0833003A8FDA /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		6D793FC716FA0833003A8FDA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		6D793FCA16FA0833003A8FDA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		6D793FCC16FA0833003A8FDA /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		6D793FCD16FA0833003A8FDA /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6D793FAB16FA0832003A8FDA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D793FB216FA0832003A8FDA /* UIKit.framework in Frameworks */,
+				6D793FB416FA0832003A8FDA /* Foundation.framework in Frameworks */,
+				6D793FB616FA0832003A8FDA /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6D793FA516FA0831003A8FDA = {
+			isa = PBXGroup;
+			children = (
+				6D793FB716FA0832003A8FDA /* reflexio */,
+				6D793FB016FA0832003A8FDA /* Frameworks */,
+				6D793FAF16FA0832003A8FDA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6D793FAF16FA0832003A8FDA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6D793FAE16FA0832003A8FDA /* reflexio.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6D793FB016FA0832003A8FDA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6D793FB116FA0832003A8FDA /* UIKit.framework */,
+				6D793FB316FA0832003A8FDA /* Foundation.framework */,
+				6D793FB516FA0832003A8FDA /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6D793FB716FA0832003A8FDA /* reflexio */ = {
+			isa = PBXGroup;
+			children = (
+				6D793FC016FA0833003A8FDA /* AppDelegate.h */,
+				6D793FC116FA0833003A8FDA /* AppDelegate.m */,
+				6D793FC916FA0833003A8FDA /* MainStoryboard.storyboard */,
+				6D793FCC16FA0833003A8FDA /* ViewController.h */,
+				6D793FCD16FA0833003A8FDA /* ViewController.m */,
+				6D793FB816FA0832003A8FDA /* Supporting Files */,
+			);
+			path = reflexio;
+			sourceTree = "<group>";
+		};
+		6D793FB816FA0832003A8FDA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6D793FB916FA0832003A8FDA /* reflexio-Info.plist */,
+				6D793FBA16FA0832003A8FDA /* InfoPlist.strings */,
+				6D793FBD16FA0832003A8FDA /* main.m */,
+				6D793FBF16FA0833003A8FDA /* reflexio-Prefix.pch */,
+				6D793FC316FA0833003A8FDA /* Default.png */,
+				6D793FC516FA0833003A8FDA /* Default@2x.png */,
+				6D793FC716FA0833003A8FDA /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6D793FAD16FA0832003A8FDA /* reflexio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D793FD116FA0833003A8FDA /* Build configuration list for PBXNativeTarget "reflexio" */;
+			buildPhases = (
+				6D793FAA16FA0832003A8FDA /* Sources */,
+				6D793FAB16FA0832003A8FDA /* Frameworks */,
+				6D793FAC16FA0832003A8FDA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = reflexio;
+			productName = reflexio;
+			productReference = 6D793FAE16FA0832003A8FDA /* reflexio.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6D793FA616FA0831003A8FDA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Tobiasz Czelakowski";
+			};
+			buildConfigurationList = 6D793FA916FA0831003A8FDA /* Build configuration list for PBXProject "reflexio" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6D793FA516FA0831003A8FDA;
+			productRefGroup = 6D793FAF16FA0832003A8FDA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6D793FAD16FA0832003A8FDA /* reflexio */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6D793FAC16FA0832003A8FDA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D793FBC16FA0832003A8FDA /* InfoPlist.strings in Resources */,
+				6D793FC416FA0833003A8FDA /* Default.png in Resources */,
+				6D793FC616FA0833003A8FDA /* Default@2x.png in Resources */,
+				6D793FC816FA0833003A8FDA /* Default-568h@2x.png in Resources */,
+				6D793FCB16FA0833003A8FDA /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6D793FAA16FA0832003A8FDA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D793FBE16FA0832003A8FDA /* main.m in Sources */,
+				6D793FC216FA0833003A8FDA /* AppDelegate.m in Sources */,
+				6D793FCE16FA0833003A8FDA /* ViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6D793FBA16FA0832003A8FDA /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6D793FBB16FA0832003A8FDA /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		6D793FC916FA0833003A8FDA /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6D793FCA16FA0833003A8FDA /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6D793FCF16FA0833003A8FDA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		6D793FD016FA0833003A8FDA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6D793FD216FA0833003A8FDA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "reflexio/reflexio-Prefix.pch";
+				INFOPLIST_FILE = "reflexio/reflexio-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6D793FD316FA0833003A8FDA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "reflexio/reflexio-Prefix.pch";
+				INFOPLIST_FILE = "reflexio/reflexio-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6D793FA916FA0831003A8FDA /* Build configuration list for PBXProject "reflexio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D793FCF16FA0833003A8FDA /* Debug */,
+				6D793FD016FA0833003A8FDA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6D793FD116FA0833003A8FDA /* Build configuration list for PBXNativeTarget "reflexio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D793FD216FA0833003A8FDA /* Debug */,
+				6D793FD316FA0833003A8FDA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6D793FA616FA0831003A8FDA /* Project object */;
+}
