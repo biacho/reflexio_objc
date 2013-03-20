@@ -83,8 +83,6 @@
 		6D793FB716FA0832003A8FDA /* reflexio */ = {
 			isa = PBXGroup;
 			children = (
-				6D793FC016FA0833003A8FDA /* AppDelegate.h */,
-				6D793FC116FA0833003A8FDA /* AppDelegate.m */,
 				6D793FC916FA0833003A8FDA /* MainStoryboard.storyboard */,
 				6D793FCC16FA0833003A8FDA /* ViewController.h */,
 				6D793FCD16FA0833003A8FDA /* ViewController.m */,
@@ -96,6 +94,8 @@
 		6D793FB816FA0832003A8FDA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6D793FC016FA0833003A8FDA /* AppDelegate.h */,
+				6D793FC116FA0833003A8FDA /* AppDelegate.m */,
 				6D793FB916FA0832003A8FDA /* reflexio-Info.plist */,
 				6D793FBA16FA0832003A8FDA /* InfoPlist.strings */,
 				6D793FBD16FA0832003A8FDA /* main.m */,
