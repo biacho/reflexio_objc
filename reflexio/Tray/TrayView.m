@@ -1,23 +1,25 @@
 //
-//  BallView.m
+//  TrayView.m
 //  reflexio
 //
 //  Created by Tobiasz Czelakowski on 25.03.2013.
 //  Copyright (c) 2013 Tobiasz Czelakowski. All rights reserved.
 //
 
-#import "BallView.h"
+#import "TrayView.h"
 
-@implementation BallView
+#define CORNER_RADIOUS 8.0f
+
+@implementation TrayView
 
 - (void)drawRect:(CGRect)rect
 {
 	UIBezierPath *roundRect = [UIBezierPath bezierPathWithRoundedRect:self.bounds
-														 cornerRadius:self.frame.size.height/2];
+														 cornerRadius:CORNER_RADIOUS];
 	
 	[roundRect addClip];
 	
-	[[UIColor redColor] setFill];
+	[[UIColor lightGrayColor] setFill];
 	UIRectFill(self.bounds);
 	
 	[[UIColor blackColor] setStroke];
@@ -34,7 +36,6 @@
 
 - (void)setup
 {
-	//NSLog(@"Promien: %f", self.frame.size.height/2);
 }
 
 - (void)awakeFromNib
@@ -48,5 +49,4 @@
 	[self setup];
     return self;
 }
-
 @end

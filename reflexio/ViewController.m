@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "BallView.h"
+#import "TrayView.h"
 
 @interface ViewController ()
 {
@@ -18,6 +19,8 @@
 @end
 
 #define BALL_SIZE 20
+#define TRAY_SIZE_X 70
+#define TRAY_SIZE_Y 20
 
 @implementation ViewController
 
@@ -35,6 +38,10 @@
 {
 	// Tutaj będzie tworzona tacka.
 	NSLog(@"I'm creating a Tray...");
+	CGRect trayFrame = CGRectMake(self.view.center.x, self.view.bounds.size.height - 50, TRAY_SIZE_X, TRAY_SIZE_Y);
+	UIView *tray = [[TrayView alloc] initWithFrame:trayFrame];
+	tray.opaque = NO;
+	[self.view addSubview:tray];
 }
 
 // Set Section

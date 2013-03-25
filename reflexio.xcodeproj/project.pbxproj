@@ -19,6 +19,7 @@
 		6D793FCB16FA0833003A8FDA /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D793FC916FA0833003A8FDA /* MainStoryboard.storyboard */; };
 		6D793FCE16FA0833003A8FDA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D793FCD16FA0833003A8FDA /* ViewController.m */; };
 		6DA68A9F17005C3500CFAFFA /* BallView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DA68A9E17005C3500CFAFFA /* BallView.m */; };
+		6DA68AA2170063F900CFAFFA /* TrayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DA68AA1170063F900CFAFFA /* TrayView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,8 @@
 		6D793FCD16FA0833003A8FDA /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		6DA68A9D17005C3500CFAFFA /* BallView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BallView.h; path = ../BallView.h; sourceTree = "<group>"; };
 		6DA68A9E17005C3500CFAFFA /* BallView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BallView.m; path = ../BallView.m; sourceTree = "<group>"; };
+		6DA68AA0170063F800CFAFFA /* TrayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrayView.h; path = Tray/TrayView.h; sourceTree = "<group>"; };
+		6DA68AA1170063F900CFAFFA /* TrayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrayView.m; path = Tray/TrayView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +94,8 @@
 				6D793FCD16FA0833003A8FDA /* ViewController.m */,
 				6DA68A9D17005C3500CFAFFA /* BallView.h */,
 				6DA68A9E17005C3500CFAFFA /* BallView.m */,
+				6DA68AA0170063F800CFAFFA /* TrayView.h */,
+				6DA68AA1170063F900CFAFFA /* TrayView.m */,
 				6D793FB816FA0832003A8FDA /* Supporting Files */,
 			);
 			path = reflexio;
@@ -182,6 +187,7 @@
 				6D793FC216FA0833003A8FDA /* AppDelegate.m in Sources */,
 				6D793FCE16FA0833003A8FDA /* ViewController.m in Sources */,
 				6DA68A9F17005C3500CFAFFA /* BallView.m in Sources */,
+				6DA68AA2170063F900CFAFFA /* TrayView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
