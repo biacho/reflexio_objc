@@ -18,6 +18,8 @@
 	BOOL play;
 }
 
+- (IBAction)playAgain:(UIButton *)sender;
+
 @end
 
 #define BALL_SIZE 20
@@ -50,7 +52,7 @@
 	if (play)
 	{
 		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.005];
+		[UIView setAnimationDuration:TIME];
 		[UIView setAnimationDelegate:self];
 		
 		//CGPoint ballPosition = CGPointMake(ball.frame.origin.x, ball.frame.origin.y);
@@ -202,15 +204,41 @@
 	NSLog(@"Game Over!");
 	play = NO;
 	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.7f];
+	[UIView setAnimationDuration:0.3f];
 	[UIView setAnimationDelegate:self];
 	backgroundView.hidden = NO;
 	[self.view bringSubviewToFront:backgroundView]; // Żeby kulka się chowała podspodem.
 	backgroundView.alpha = 1.0f;
+	[ball removeFromSuperview];
+	[tray removeFromSuperview];
 	[UIView commitAnimations];
 
 }
 
+- (IBAction)playAgain:(UIButton *)sender
+{
+	NSLog(@"Start New Game!");
+	
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.3f];
+	//[UIView setAnimationDelay:2];
+	[UIView setAnimationDelegate:self];
+	[self createBall];
+	[self createTray];
+	backgroundView.alpha = 0.0f;
+	[self reset];
+	backgroundView.hidden = NO;
+	[UIView commitAnimations];
+}
+
+- (void)reset
+{
+	x = 0;
+	y = 1;
+	t = TIME;
+	play = YES;
+	[self moveBall];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -220,15 +248,11 @@
 	// Inicjalizacja
 	[self createBall];
 	[self createTray];
-	play = YES;
 	// -------------
 	
 	// DEBUG
 	//[self gameOver];
-	x = 0;
-	y = 1;
-	t = TIME;
-	[self moveBall];
+	[self reset];
 	// -----
 }
 
