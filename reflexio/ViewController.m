@@ -15,6 +15,7 @@
 	IBOutlet UIView *backgroundView;
 	UIView *ball, *tray;
 	double x,y,t;
+	BOOL play;
 }
 
 @end
@@ -46,33 +47,36 @@
 
 - (void)moveBall
 {
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.005];
-	[UIView setAnimationDelegate:self];
-	
-	//CGPoint ballPosition = CGPointMake(ball.frame.origin.x, ball.frame.origin.y);
-	CGPoint ballPosition = CGPointMake(ball.center.x, ball.center.y);
-	CGPoint buffor;
-	buffor = ballPosition;
-	
-	buffor.x += x;
-	buffor.y += y;
-	
-	//NSLog(@"y: %g", y);
-	//NSLog(@"buffor: %@ : %@", [NSNumber numberWithFloat:buffor.x], [NSNumber numberWithFloat:buffor.y]);
+	if (play)
+	{
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.005];
+		[UIView setAnimationDelegate:self];
 		
-	if ([self przeszkoda:buffor])
-	{
-		[self sciana:buffor];
-		[self performSelector:@selector(moveBall) withObject:nil afterDelay:TIME];
+		//CGPoint ballPosition = CGPointMake(ball.frame.origin.x, ball.frame.origin.y);
+		CGPoint ballPosition = CGPointMake(ball.center.x, ball.center.y);
+		CGPoint buffor;
+		buffor = ballPosition;
+		
+		buffor.x += x;
+		buffor.y += y;
+		
+		//NSLog(@"y: %g", y);
+		//NSLog(@"ball y = %@", [NSNumber numberWithFloat:ball.center.y]);
+		
+		if ([self przeszkoda:buffor])
+		{
+			[self sciana:buffor];
+			[self performSelector:@selector(moveBall) withObject:nil afterDelay:TIME];
+		}
+		else
+		{
+			ball.center = buffor;
+			[self performSelector:@selector(moveBall) withObject:nil afterDelay:TIME];
+		}
+		
+		[UIView commitAnimations];
 	}
-	else
-	{
-		ball.center = buffor;
-		[self performSelector:@selector(moveBall) withObject:nil afterDelay:TIME];
-	}
-	
-	[UIView commitAnimations];
 }
 
 - (BOOL)przeszkoda:(CGPoint)point
@@ -80,7 +84,7 @@
 	if (x != 0 || y != 0)
 	{
 		if (point.x /*+ BALL_SIZE/2*/ >= self.view.bounds.size.width ||point.x /*- BALL_SIZE/2*/ <= 0) return YES;
-		else if (point.y /*+ BALL_SIZE/2*/ >= self.view.bounds.size.height || point.y /*- BALL_SIZE/2*/ <= 0) return YES;
+		else if (point.y /*+ BALL_SIZE/2*/ >= tray.frame.origin.y || point.y /*- BALL_SIZE/2*/ <= 0) return YES;
 		else return NO;
 	}
 	return YES;
@@ -88,7 +92,7 @@
 
 - (void)sciana:(CGPoint)point
 {
-	if (point.y >= self.view.bounds.size.height || point.y <= 0) // Dolna ściana && Górna ściana
+	if (point.y >= tray.frame.origin.y || point.y <= 0) // Dolna ściana/tacka && Górna ściana
 	{
 		if (point.y <= 0)
 		{
@@ -97,8 +101,24 @@
 		}
 		else
 		{
-			y = -y;
 			NSLog(@"Dolna Ściana...");
+			//NSLog(@"tray.frame.origin.x: %g",  tray.frame.origin.x);
+			//NSLog(@"tray.frame.size.width: %g",  tray.frame.size.width);
+			//NSLog(@"ball.center.x: %g", ball.center.x);
+			
+			
+			if (ball.center.x > tray.frame.origin.x && ball.center.x < tray.frame.origin.x + TRAY_SIZE_X)
+			{
+		
+					y = -y;
+				//}
+			}
+			else
+			{
+				NSLog(@"Game Over!");
+				[self gameOver];
+			}
+			
 		}
 	}
 	else if (point.x >= self.view.bounds.size.width || point.x <= 0) // Prawa ściana && Lewa ściana
@@ -155,7 +175,7 @@
 - (void)gameOver
 {
 	NSLog(@"Game Over!");
-	
+	play = NO;
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.7f];
 	[UIView setAnimationDelegate:self];
@@ -175,6 +195,7 @@
 	// Inicjalizacja
 	[self createBall];
 	[self createTray];
+	play = YES;
 	// -------------
 	
 	// DEBUG
