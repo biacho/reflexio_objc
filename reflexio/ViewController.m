@@ -109,9 +109,34 @@
 			
 			if (ball.center.x > tray.frame.origin.x && ball.center.x < tray.frame.origin.x + TRAY_SIZE_X)
 			{
-		
-					y = -y;
-				//}
+				int znak = 1;
+				int kierunek = 1;
+				if (ball.center.x < tray.frame.origin.x + TRAY_SIZE_X/2 && x == 0) kierunek = -1;
+				if (x < 0) znak= -1;
+				
+// Podział tacki na części, użyte w wybieraniu konta odbicia.
+#define SEKCJA1 TRAY_SIZE_X * 0.2 // 20%
+#define SEKCJA2 TRAY_SIZE_X * 0.2 // 20%
+				
+				if (ball.center.x < tray.frame.origin.x + SEKCJA1 ||
+					tray.frame.origin.x + TRAY_SIZE_X - SEKCJA1 < ball.center.x)
+				{
+					NSLog(@"Sekcja 1.");
+					x = kierunek * 3 * znak;
+				}
+				else if (ball.center.x < tray.frame.origin.x + SEKCJA1 + SEKCJA2 ||
+						 tray.frame.origin.x + TRAY_SIZE_X - SEKCJA1 - SEKCJA2 < ball.center.x)
+				{
+					NSLog(@"Sekcja 2.");
+					x = kierunek * 1 * znak;
+				}
+				else
+				{
+					NSLog(@"Sekcja 3.");
+					x = kierunek * 0.5 * znak;
+				}
+				
+				y = -y;
 			}
 			else
 			{
