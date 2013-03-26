@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D70B4281701AFEF00C8D994 /* BrickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D70B4271701AFEF00C8D994 /* BrickView.m */; };
 		6D793FB216FA0832003A8FDA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D793FB116FA0832003A8FDA /* UIKit.framework */; };
 		6D793FB416FA0832003A8FDA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D793FB316FA0832003A8FDA /* Foundation.framework */; };
 		6D793FB616FA0832003A8FDA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D793FB516FA0832003A8FDA /* CoreGraphics.framework */; };
@@ -23,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6D70B4261701AFEE00C8D994 /* BrickView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrickView.h; path = Brick/BrickView.h; sourceTree = "<group>"; };
+		6D70B4271701AFEF00C8D994 /* BrickView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrickView.m; path = Brick/BrickView.m; sourceTree = "<group>"; };
 		6D793FAE16FA0832003A8FDA /* reflexio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = reflexio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D793FB116FA0832003A8FDA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6D793FB316FA0832003A8FDA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -96,6 +99,8 @@
 				6DA68A9E17005C3500CFAFFA /* BallView.m */,
 				6DA68AA0170063F800CFAFFA /* TrayView.h */,
 				6DA68AA1170063F900CFAFFA /* TrayView.m */,
+				6D70B4261701AFEE00C8D994 /* BrickView.h */,
+				6D70B4271701AFEF00C8D994 /* BrickView.m */,
 				6D793FB816FA0832003A8FDA /* Supporting Files */,
 			);
 			path = reflexio;
@@ -188,6 +193,7 @@
 				6D793FCE16FA0833003A8FDA /* ViewController.m in Sources */,
 				6DA68A9F17005C3500CFAFFA /* BallView.m in Sources */,
 				6DA68AA2170063F900CFAFFA /* TrayView.m in Sources */,
+				6D70B4281701AFEF00C8D994 /* BrickView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

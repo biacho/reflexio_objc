@@ -1,16 +1,16 @@
 //
-//  TrayView.m
+//  BrickView.m
 //  reflexio
 //
-//  Created by Tobiasz Czelakowski on 25.03.2013.
+//  Created by Tobiasz Czelakowski on 26.03.2013.
 //  Copyright (c) 2013 Tobiasz Czelakowski. All rights reserved.
 //
 
-#import "TrayView.h"
+#import "BrickView.h"
 
 #define CORNER_RADIOUS 8.0f
 
-@implementation TrayView
+@implementation BrickView
 
 - (void)drawRect:(CGRect)rect
 {
@@ -19,7 +19,7 @@
 	
 	[roundRect addClip];
 	
-	[[UIColor lightGrayColor] setFill];
+	[[UIColor greenColor] setFill];
 	UIRectFill(self.bounds);
 	
 	[[UIColor blackColor] setStroke];

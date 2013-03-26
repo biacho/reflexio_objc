@@ -9,11 +9,17 @@
 #import "ViewController.h"
 #import "BallView.h"
 #import "TrayView.h"
+#import "BrickView.h"
 
 @interface ViewController ()
 {
 	IBOutlet UIView *backgroundView;
-	UIView *ball, *tray;
+	UIView *ball, *tray, *brick;
+	NSMutableArray *bricksArray;
+	CGPoint brickPoint_begin;
+	CGPoint brickPoint_end;
+	IBOutlet UILabel *scoreLabel;
+	int score;
 	double x,y,t;
 	BOOL play;
 }
@@ -23,14 +29,22 @@
 @end
 
 #define BALL_SIZE 20
-#define TRAY_SIZE_X 80
+
+#define TRAY_SIZE_X 320 // 80
 #define TRAY_SIZE_Y 20
+
+#define BRICK_SIZE_X 150 // 50
+#define BRICK_SIZE_Y 100
 
 #define TIME 0.005
 
-@implementation ViewController
 
-// Create Section
+// Podział tacki na części, użyte w wybieraniu konta odbicia.
+#define SEKCJA1 TRAY_SIZE_X * 0.2 // 20%
+#define SEKCJA2 TRAY_SIZE_X * 0.2 // 20%
+
+
+@implementation ViewController
 
 // !!!: KULKA
 - (void)createBall
@@ -46,7 +60,6 @@
 	ball.opaque = NO;
 	[self.view addSubview:ball];
 }
-
 - (void)moveBall
 {
 	if (play)
@@ -81,17 +94,34 @@
 	}
 }
 
-- (BOOL)przeszkoda:(CGPoint)point
+- (void)sprawdzKtoraToKostka:(int)i
+{
+	UIView *brickViewTemp = [bricksArray objectAtIndex:i];
+	CGPoint brickPoint = CGPointMake(brickViewTemp.center.x, brickViewTemp.center.y);
+	brickPoint_begin = CGPointMake(brickPoint.x - BRICK_SIZE_X/2, brickPoint.y - BRICK_SIZE_Y/2);
+	brickPoint_end = CGPointMake(brickPoint.x + BRICK_SIZE_X/2, brickPoint.y + BRICK_SIZE_Y/2);
+}
+- (BOOL)przeszkoda:(CGPoint)ballPoint
 {
 	if (x != 0 || y != 0)
 	{
-		if (point.x /*+ BALL_SIZE/2*/ >= self.view.bounds.size.width ||point.x /*- BALL_SIZE/2*/ <= 0) return YES;
-		else if (point.y /*+ BALL_SIZE/2*/ >= tray.frame.origin.y || point.y /*- BALL_SIZE/2*/ <= 0) return YES;
+		// !!!: Zrobić pentle for dla całej tablicy
+		[self sprawdzKtoraToKostka:0];
+		
+		if (ballPoint.x >= self.view.bounds.size.width || ballPoint.x <= 0) return YES;
+		else if (ballPoint.y >= tray.frame.origin.y || ballPoint.y <= 0) return YES;
+		else if (ballPoint.x >= brickPoint_begin.x && ballPoint.x <= brickPoint_end.x)
+		{
+			if (ballPoint.y >= brickPoint_begin.y && ballPoint.y <= brickPoint_end.y)
+			{
+				return YES;
+			}
+			return NO;
+		}
 		else return NO;
 	}
 	return YES;
 }
-
 - (void)sciana:(CGPoint)point
 {
 	if (point.y >= tray.frame.origin.y || point.y <= 0) // Dolna ściana/tacka && Górna ściana
@@ -116,10 +146,6 @@
 				if (ball.center.x < tray.frame.origin.x + TRAY_SIZE_X/2 && x == 0) kierunek = -1;
 				if (x < 0) znak= -1;
 				
-// Podział tacki na części, użyte w wybieraniu konta odbicia.
-#define SEKCJA1 TRAY_SIZE_X * 0.2 // 20%
-#define SEKCJA2 TRAY_SIZE_X * 0.2 // 20%
-				
 				if (ball.center.x < tray.frame.origin.x + SEKCJA1 ||
 					tray.frame.origin.x + TRAY_SIZE_X - SEKCJA1 < ball.center.x)
 				{
@@ -139,10 +165,11 @@
 				}
 				
 				y = -y;
+				score++;
+				scoreLabel.text = [NSString stringWithFormat:@"Punkty: %i", score];
 			}
 			else
 			{
-				NSLog(@"Game Over!");
 				[self gameOver];
 			}
 			
@@ -153,7 +180,34 @@
 		x = -x;
 		//y = y;
 	}
+	else // Kostka
+	{
+		[self kostka:point];
+	}
 
+}
+
+- (void)kostka:(CGPoint)ballPoint
+{
+	[self sprawdzKtoraToKostka:0];
+	if (ballPoint.x >= brickPoint_begin.x && ballPoint.x <= brickPoint_end.x) 
+	{
+		if (ballPoint.y >= brickPoint_begin.y && ballPoint.y <= brickPoint_end.y) // Góra/Dół
+		{
+			y = -y; 
+			
+			if (ballPoint.x <= brickPoint_begin.x) // Lewa
+			{
+				x = -x;
+				y = -y;
+			}
+			else if (ballPoint.x >= brickPoint_end.x)
+			{
+				x = -x;
+				y = -y;
+			}
+		}
+	}
 }
 
 // !!!: TACKA
@@ -183,19 +237,40 @@
 	if (trayPosition.x <= 0)
 	{
 		trayPosition.x = 0;
-		NSLog(@"Lewa ściana.");
 	}
 	else if (trayPosition.x >= self.view.frame.size.width - TRAY_SIZE_X)
 	{
 		trayPosition.x = self.view.frame.size.width - TRAY_SIZE_X;
-		NSLog(@"Prawa ściana.");
 	}
 	
 	tray.center = CGPointMake(trayPosition.x + TRAY_SIZE_X/2, trayPosition.y);
-	//NSLog(@"Pozycja Tacki: %@", [NSNumber numberWithFloat:temp.x]);
 	[move setTranslation:CGPointZero inView:self.view];
 }
 
+// !!!: KOSTKA
+- (void)createBrick
+{
+	NSLog(@"I'm creating a Brick...");
+	CGRect brickFrame = CGRectMake(self.view.center.x - BRICK_SIZE_X/2,
+								  self.view.center.y - 100,
+								  BRICK_SIZE_X,
+								  BRICK_SIZE_Y);
+	
+	brick = [[BrickView alloc] initWithFrame:brickFrame];
+	
+	//CGPoint brickPoint = CGPointMake(brick.center.x, brick.center.y);
+	//brickPoint_begin = CGPointMake(brickPoint.x - BRICK_SIZE_X/2, brickPoint.y - BRICK_SIZE_X/2);
+	//brickPoint_end = CGPointMake(brickPoint.x + BRICK_SIZE_X/2, brickPoint.y + BRICK_SIZE_X/2);
+
+	//[bricksArray addObject:[NSValue valueWithCGPoint:brickPoint]];
+	[bricksArray addObject:brick];
+	
+	//NSLog(@"brickPoint: %@", NSStringFromCGPoint(brickPoint));
+	//NSLog(@"brickArray: %@", bricksArray);
+	
+	brick.opaque = NO;
+	[self.view addSubview:brick];
+}
 
 
 // Set Section
@@ -246,13 +321,39 @@
 	NSLog(@"reFlexio!");
 	
 	// Inicjalizacja
+	bricksArray = [[NSMutableArray alloc] init];
+
 	[self createBall];
 	[self createTray];
+	[self createBrick];
+	[self reset];
 	// -------------
 	
 	// DEBUG
-	//[self gameOver];
-	[self reset];
+	/*
+	CGPoint newPoint = [[bricksArray objectAtIndex:0] CGPointValue];
+	NSLog(@"newPoint: %f", newPoint.x);
+	CGPoint newPoint2_begin = CGPointMake(newPoint.x - BRICK_SIZE_X/2, newPoint.y - BRICK_SIZE_X/2);
+	CGPoint newPoint2_end = CGPointMake(newPoint.x + BRICK_SIZE_X/2, newPoint.y + BRICK_SIZE_X/2);
+	NSLog(@"newPoint2:\nStart: %f\nEnd: %f", newPoint2_begin.x, newPoint2_end.x);
+	
+	
+	NSLog(@"bricks array: %@", [bricksArray objectAtIndex:0]);
+	NSString *str = NSStringFromCGPoint([[bricksArray objectAtIndex:0] CGPointValue]);
+	NSLog(@"str: %@", str);
+	int num = 160;
+	NSString *str2 = [NSString stringWithFormat:@"%i", num];
+	if ([str rangeOfString:str2].location != NSNotFound)
+	{
+		int num2 = [str rangeOfString:str2].location;
+		NSLog(@"num2: %i", num2);
+		NSLog(@"Znalazł...");
+	}
+	else
+	{
+		NSLog(@"Nie znalazł...");
+	}
+	*/
 	// -----
 }
 
