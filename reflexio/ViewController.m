@@ -20,7 +20,7 @@
 	CGPoint brickPoint_end;
 	IBOutlet UILabel *scoreLabel;
 	int score;
-	double x,y,t;
+	double x,y;
 	BOOL play;
 }
 
@@ -36,7 +36,8 @@
 #define BRICK_SIZE_X 150 // 50
 #define BRICK_SIZE_Y 100
 
-#define TIME 0.005
+#define SPEED 0.005
+#define REMOVE_TIME 0.01
 
 
 // Podział tacki na części, użyte w wybieraniu konta odbicia.
@@ -65,7 +66,7 @@
 	if (play)
 	{
 		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:TIME];
+		[UIView setAnimationDuration:SPEED];
 		[UIView setAnimationDelegate:self];
 		
 		//CGPoint ballPosition = CGPointMake(ball.frame.origin.x, ball.frame.origin.y);
@@ -82,24 +83,16 @@
 		if ([self przeszkoda:buffor])
 		{
 			[self sciana:buffor];
-			[self performSelector:@selector(moveBall) withObject:nil afterDelay:TIME];
+			[self performSelector:@selector(moveBall) withObject:nil afterDelay:SPEED];
 		}
 		else
 		{
 			ball.center = buffor;
-			[self performSelector:@selector(moveBall) withObject:nil afterDelay:TIME];
+			[self performSelector:@selector(moveBall) withObject:nil afterDelay:SPEED];
 		}
 		
 		[UIView commitAnimations];
 	}
-}
-
-- (void)sprawdzKtoraToKostka:(int)i
-{
-	UIView *brickViewTemp = [bricksArray objectAtIndex:i];
-	CGPoint brickPoint = CGPointMake(brickViewTemp.center.x, brickViewTemp.center.y);
-	brickPoint_begin = CGPointMake(brickPoint.x - BRICK_SIZE_X/2, brickPoint.y - BRICK_SIZE_Y/2);
-	brickPoint_end = CGPointMake(brickPoint.x + BRICK_SIZE_X/2, brickPoint.y + BRICK_SIZE_Y/2);
 }
 - (BOOL)przeszkoda:(CGPoint)ballPoint
 {
@@ -184,31 +177,9 @@
 	{
 		[self kostka:point];
 	}
-
+	
 }
 
-- (void)kostka:(CGPoint)ballPoint
-{
-	[self sprawdzKtoraToKostka:0];
-	if (ballPoint.x >= brickPoint_begin.x && ballPoint.x <= brickPoint_end.x) 
-	{
-		if (ballPoint.y >= brickPoint_begin.y && ballPoint.y <= brickPoint_end.y) // Góra/Dół
-		{
-			y = -y; 
-			
-			if (ballPoint.x <= brickPoint_begin.x) // Lewa
-			{
-				x = -x;
-				y = -y;
-			}
-			else if (ballPoint.x >= brickPoint_end.x)
-			{
-				x = -x;
-				y = -y;
-			}
-		}
-	}
-}
 
 // !!!: TACKA
 - (void)createTray
@@ -257,21 +228,70 @@
 								  BRICK_SIZE_Y);
 	
 	brick = [[BrickView alloc] initWithFrame:brickFrame];
-	
-	//CGPoint brickPoint = CGPointMake(brick.center.x, brick.center.y);
-	//brickPoint_begin = CGPointMake(brickPoint.x - BRICK_SIZE_X/2, brickPoint.y - BRICK_SIZE_X/2);
-	//brickPoint_end = CGPointMake(brickPoint.x + BRICK_SIZE_X/2, brickPoint.y + BRICK_SIZE_X/2);
-
-	//[bricksArray addObject:[NSValue valueWithCGPoint:brickPoint]];
 	[bricksArray addObject:brick];
-	
-	//NSLog(@"brickPoint: %@", NSStringFromCGPoint(brickPoint));
-	//NSLog(@"brickArray: %@", bricksArray);
 	
 	brick.opaque = NO;
 	[self.view addSubview:brick];
 }
 
+
+- (void)kostka:(CGPoint)ballPoint
+{
+	for (int i = 0; i < bricksArray.count; i++)
+	{
+		[self sprawdzKtoraToKostka:i];
+		
+		if (ballPoint.x >= brickPoint_begin.x && ballPoint.x <= brickPoint_end.x)
+		{
+			if (ballPoint.y >= brickPoint_begin.y && ballPoint.y <= brickPoint_end.y) // Góra/Dół
+			{
+				y = -y;
+				[self zniszczKostke:i];
+				
+				if (ballPoint.x <= brickPoint_begin.x || ballPoint.x >= brickPoint_end.x) // Lewa/Prawa
+				{
+					x = -x;
+					y = -y;
+					[self zniszczKostke:i];
+				}
+			}
+		}
+	}
+}
+- (void)sprawdzKtoraToKostka:(int)i
+{
+	if (bricksArray.count >= 1)
+	{
+		UIView *brickViewTemp = [bricksArray objectAtIndex:i];
+		CGPoint brickPoint = CGPointMake(brickViewTemp.center.x, brickViewTemp.center.y);
+		brickPoint_begin = CGPointMake(brickPoint.x - BRICK_SIZE_X/2, brickPoint.y - BRICK_SIZE_Y/2);
+		brickPoint_end = CGPointMake(brickPoint.x + BRICK_SIZE_X/2, brickPoint.y + BRICK_SIZE_Y/2);
+	}
+	else
+	{
+		brickPoint_begin = brickPoint_end = CGPointZero;
+	}
+}
+- (void)zniszczKostke:(int)index
+{
+	UIView *brickTemp = [bricksArray objectAtIndex:index];
+	
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDuration:REMOVE_TIME];
+	brickTemp.alpha = 0.0;
+	[UIView setAnimationDidStopSelector:@selector(wyczysc:)];
+	[UIView commitAnimations];
+	
+}
+- (void)wyczysc:(int)index
+{
+	NSLog(@"index: %i", index);
+	NSLog(@"bricksArray: %i", bricksArray.count);
+	[[bricksArray objectAtIndex:index] removeFromSuperview];
+	[bricksArray removeObjectAtIndex:index];
+	NSLog(@"bricksArray after remove: %@", bricksArray);
+}
 
 // Set Section
 - (void)gameOver
@@ -310,7 +330,6 @@
 {
 	x = 0;
 	y = 1;
-	t = TIME;
 	play = YES;
 	[self moveBall];
 }
@@ -330,30 +349,6 @@
 	// -------------
 	
 	// DEBUG
-	/*
-	CGPoint newPoint = [[bricksArray objectAtIndex:0] CGPointValue];
-	NSLog(@"newPoint: %f", newPoint.x);
-	CGPoint newPoint2_begin = CGPointMake(newPoint.x - BRICK_SIZE_X/2, newPoint.y - BRICK_SIZE_X/2);
-	CGPoint newPoint2_end = CGPointMake(newPoint.x + BRICK_SIZE_X/2, newPoint.y + BRICK_SIZE_X/2);
-	NSLog(@"newPoint2:\nStart: %f\nEnd: %f", newPoint2_begin.x, newPoint2_end.x);
-	
-	
-	NSLog(@"bricks array: %@", [bricksArray objectAtIndex:0]);
-	NSString *str = NSStringFromCGPoint([[bricksArray objectAtIndex:0] CGPointValue]);
-	NSLog(@"str: %@", str);
-	int num = 160;
-	NSString *str2 = [NSString stringWithFormat:@"%i", num];
-	if ([str rangeOfString:str2].location != NSNotFound)
-	{
-		int num2 = [str rangeOfString:str2].location;
-		NSLog(@"num2: %i", num2);
-		NSLog(@"Znalazł...");
-	}
-	else
-	{
-		NSLog(@"Nie znalazł...");
-	}
-	*/
 	// -----
 }
 
