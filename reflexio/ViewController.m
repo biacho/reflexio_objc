@@ -14,7 +14,8 @@
 @interface ViewController ()
 {
 	IBOutlet UIView *backgroundView;
-	UIView *ball, *tray, *brick;
+	UIView *ball, *tray, *brick, *gameField;
+	//IBOutlet UIView *gameField;
 	NSMutableArray *bricksArray;
 	CGPoint brickPoint_begin;
 	CGPoint brickPoint_end;
@@ -24,17 +25,18 @@
 	BOOL play;
 }
 
+
 - (IBAction)playAgain:(UIButton *)sender;
 
 @end
 
 #define BALL_SIZE 20
 
-#define TRAY_SIZE_X 320 // 80
+#define TRAY_SIZE_X 80 // 80
 #define TRAY_SIZE_Y 20
 
-#define BRICK_SIZE_X 150 // 50
-#define BRICK_SIZE_Y 100
+#define BRICK_SIZE_X 50 // 50
+#define BRICK_SIZE_Y 20 // 20
 
 #define SPEED 0.005
 #define REMOVE_TIME 0.01
@@ -47,19 +49,27 @@
 
 @implementation ViewController
 
+
+- (void)createGameField
+{
+	CGRect gameFieldRect = CGRectMake(0, 40, 320, 528);
+	gameField = [[UIView alloc] initWithFrame:gameFieldRect];
+	gameField.backgroundColor = [UIColor clearColor];
+	[self.view addSubview:gameField];
+}
 // !!!: KULKA
 - (void)createBall
 {
-	// Tutaj będzie tworzona piłeczka.
 	NSLog(@"I'm creating a Ball...");
-	CGRect ballFrame = CGRectMake(self.view.center.x - BALL_SIZE/2,
-								  self.view.center.y - BALL_SIZE/2,
+	
+	CGRect ballFrame = CGRectMake(gameField.center.x - BALL_SIZE/2,
+								  gameField.center.y - BALL_SIZE/2,
 								  BALL_SIZE,
 								  BALL_SIZE);
 	
 	ball = [[BallView alloc] initWithFrame:ballFrame];
 	ball.opaque = NO;
-	[self.view addSubview:ball];
+	[gameField addSubview:ball];
 }
 - (void)moveBall
 {
@@ -69,16 +79,12 @@
 		[UIView setAnimationDuration:SPEED];
 		[UIView setAnimationDelegate:self];
 		
-		//CGPoint ballPosition = CGPointMake(ball.frame.origin.x, ball.frame.origin.y);
 		CGPoint ballPosition = CGPointMake(ball.center.x, ball.center.y);
 		CGPoint buffor;
 		buffor = ballPosition;
 		
 		buffor.x += x;
 		buffor.y += y;
-		
-		//NSLog(@"y: %g", y);
-		//NSLog(@"ball y = %@", [NSNumber numberWithFloat:ball.center.y]);
 		
 		if ([self przeszkoda:buffor])
 		{
@@ -98,20 +104,28 @@
 {
 	if (x != 0 || y != 0)
 	{
-		// !!!: Zrobić pentle for dla całej tablicy
-		[self sprawdzKtoraToKostka:0];
-		
-		if (ballPoint.x >= self.view.bounds.size.width || ballPoint.x <= 0) return YES;
-		else if (ballPoint.y >= tray.frame.origin.y || ballPoint.y <= 0) return YES;
-		else if (ballPoint.x >= brickPoint_begin.x && ballPoint.x <= brickPoint_end.x)
-		{
-			if (ballPoint.y >= brickPoint_begin.y && ballPoint.y <= brickPoint_end.y)
+			if (ballPoint.x >= gameField.bounds.size.width || ballPoint.x <= 0) return YES;
+			else if (ballPoint.y >= tray.frame.origin.y || ballPoint.y <= 0) return YES;
+			else
 			{
-				return YES;
+				for (int i = 0; i < bricksArray.count; i++)
+				{
+					[self sprawdzKtoraToKostka:i];
+					
+					if (ballPoint.x >= brickPoint_begin.x && ballPoint.x <= brickPoint_end.x)
+					{
+						NSLog(@"Przestrzen kostki X");
+						if (ballPoint.y >= brickPoint_begin.y && ballPoint.y <= brickPoint_end.y)
+						{
+							NSLog(@"Przestrzen kostki Y");
+							return YES;
+						}
+						return NO;
+					}
+					else return NO;
+				}
+				return NO;
 			}
-			return NO;
-		}
-		else return NO;
 	}
 	return YES;
 }
@@ -127,10 +141,6 @@
 		else
 		{
 			NSLog(@"Dolna Ściana...");
-			//NSLog(@"tray.frame.origin.x: %g",  tray.frame.origin.x);
-			//NSLog(@"tray.frame.size.width: %g",  tray.frame.size.width);
-			//NSLog(@"ball.center.x: %g", ball.center.x);
-			
 			
 			if (ball.center.x > tray.frame.origin.x && ball.center.x < tray.frame.origin.x + TRAY_SIZE_X)
 			{
@@ -168,10 +178,9 @@
 			
 		}
 	}
-	else if (point.x >= self.view.bounds.size.width || point.x <= 0) // Prawa ściana && Lewa ściana
+	else if (point.x >= gameField.bounds.size.width || point.x <= 0) // Prawa ściana && Lewa ściana
 	{
 		x = -x;
-		//y = y;
 	}
 	else // Kostka
 	{
@@ -184,16 +193,15 @@
 // !!!: TACKA
 - (void)createTray
 {
-	// Tutaj będzie tworzona tacka.
 	NSLog(@"I'm creating a Tray...");
-	CGRect trayFrame = CGRectMake(self.view.center.x - TRAY_SIZE_X/2,
-								  self.view.bounds.size.height - 50,
+	CGRect trayFrame = CGRectMake(gameField.center.x - TRAY_SIZE_X/2,
+								  gameField.bounds.size.height - TRAY_SIZE_Y-20,
 								  TRAY_SIZE_X,
 								  TRAY_SIZE_Y);
 	
 	tray = [[TrayView alloc] initWithFrame:trayFrame];
 	tray.opaque = NO;
-	[self.view addSubview:tray];
+	[gameField addSubview:tray];
 	
 	// gest
 	UIPanGestureRecognizer *moveTrayGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveTray:)];
@@ -201,7 +209,7 @@
 }
 - (void)moveTray:(UIPanGestureRecognizer *)move
 {
-	CGPoint translation = [move translationInView:self.view];
+	CGPoint translation = [move translationInView:gameField];
 	CGPoint trayPosition = CGPointMake(tray.frame.origin.x, tray.center.y);
 	
 	trayPosition.x += translation.x;
@@ -209,21 +217,21 @@
 	{
 		trayPosition.x = 0;
 	}
-	else if (trayPosition.x >= self.view.frame.size.width - TRAY_SIZE_X)
+	else if (trayPosition.x >= gameField.frame.size.width - TRAY_SIZE_X)
 	{
-		trayPosition.x = self.view.frame.size.width - TRAY_SIZE_X;
+		trayPosition.x = gameField.frame.size.width - TRAY_SIZE_X;
 	}
 	
 	tray.center = CGPointMake(trayPosition.x + TRAY_SIZE_X/2, trayPosition.y);
-	[move setTranslation:CGPointZero inView:self.view];
+	[move setTranslation:CGPointZero inView:gameField];
 }
 
 // !!!: KOSTKA
 - (void)createBrick
 {
 	NSLog(@"I'm creating a Brick...");
-	CGRect brickFrame = CGRectMake(self.view.center.x - BRICK_SIZE_X/2,
-								  self.view.center.y - 100,
+	CGRect brickFrame = CGRectMake(gameField.center.x - BRICK_SIZE_X/2,
+								  gameField.center.y - 100,
 								  BRICK_SIZE_X,
 								  BRICK_SIZE_Y);
 	
@@ -231,9 +239,25 @@
 	[bricksArray addObject:brick];
 	
 	brick.opaque = NO;
-	[self.view addSubview:brick];
+	[gameField addSubview:brick];
 }
 
+- (void)createBrick2
+{
+	NSLog(@"I'm creating a Brick2...");
+	
+	CGRect brickFrame = CGRectMake(gameField.center.x - BRICK_SIZE_X/2,
+								   gameField.center.y - 100,
+								   BRICK_SIZE_X,
+								   BRICK_SIZE_Y);
+	
+	
+	brick = [[BrickView alloc] initWithFrame:brickFrame];
+	[bricksArray addObject:brick];
+	
+	brick.opaque = NO;
+	[gameField addSubview:brick];
+}
 
 - (void)kostka:(CGPoint)ballPoint
 {
@@ -245,14 +269,14 @@
 		{
 			if (ballPoint.y >= brickPoint_begin.y && ballPoint.y <= brickPoint_end.y) // Góra/Dół
 			{
-				y = -y;
 				[self zniszczKostke:i];
+				y = -y;
 				
 				if (ballPoint.x <= brickPoint_begin.x || ballPoint.x >= brickPoint_end.x) // Lewa/Prawa
 				{
+					[self zniszczKostke:i];
 					x = -x;
 					y = -y;
-					[self zniszczKostke:i];
 				}
 			}
 		}
@@ -302,7 +326,7 @@
 	[UIView setAnimationDuration:0.3f];
 	[UIView setAnimationDelegate:self];
 	backgroundView.hidden = NO;
-	[self.view bringSubviewToFront:backgroundView]; // Żeby kulka się chowała podspodem.
+	//[self.view bringSubviewToFront:backgroundView]; // Żeby kulka się chowała podspodem.
 	backgroundView.alpha = 1.0f;
 	[ball removeFromSuperview];
 	[tray removeFromSuperview];
@@ -322,7 +346,7 @@
 	[self createTray];
 	backgroundView.alpha = 0.0f;
 	[self reset];
-	backgroundView.hidden = NO;
+	backgroundView.hidden = YES;
 	[UIView commitAnimations];
 }
 
@@ -341,15 +365,12 @@
 	
 	// Inicjalizacja
 	bricksArray = [[NSMutableArray alloc] init];
-
+	[self createGameField];
 	[self createBall];
 	[self createTray];
 	[self createBrick];
 	[self reset];
 	// -------------
-	
-	// DEBUG
-	// -----
 }
 
 - (void)didReceiveMemoryWarning
@@ -357,5 +378,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+
 
 @end
