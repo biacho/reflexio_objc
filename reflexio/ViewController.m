@@ -31,6 +31,7 @@
 @end
 
 #define BALL_SIZE 20
+#define BALL_SQUARE BALL_SIZE/2
 
 #define TRAY_SIZE_X 80 // 80
 #define TRAY_SIZE_Y 20
@@ -112,12 +113,14 @@
 				{
 					[self sprawdzKtoraToKostka:i];
 					
-					if (ballPoint.x >= brickPoint_begin.x && ballPoint.x <= brickPoint_end.x)
+					if (ballPoint.x + BALL_SQUARE >= brickPoint_begin.x &&
+						ballPoint.x + BALL_SQUARE <= brickPoint_end.x)
 					{
-						NSLog(@"Przestrzen kostki X");
-						if (ballPoint.y >= brickPoint_begin.y && ballPoint.y <= brickPoint_end.y)
+						//NSLog(@"Przestrzen kostki X");
+						if (ballPoint.y + BALL_SQUARE >= brickPoint_begin.y &&
+							ballPoint.y + BALL_SQUARE <= brickPoint_end.y)
 						{
-							NSLog(@"Przestrzen kostki Y");
+							//NSLog(@"Przestrzen kostki Y");
 							return YES;
 						}
 						return NO;
@@ -178,7 +181,7 @@
 			
 		}
 	}
-	else if (point.x >= gameField.bounds.size.width || point.x <= 0) // Prawa ściana && Lewa ściana
+	else if (point.x >= gameField.bounds.size.width  || point.x <= 0) // Prawa ściana && Lewa ściana
 	{
 		x = -x;
 	}
@@ -246,8 +249,8 @@
 {
 	NSLog(@"I'm creating a Brick2...");
 	
-	CGRect brickFrame = CGRectMake(gameField.center.x - BRICK_SIZE_X/2,
-								   gameField.center.y - 100,
+	CGRect brickFrame = CGRectMake(gameField.center.x - BRICK_SIZE_X/2 + 50,
+								   gameField.center.y - 200,
 								   BRICK_SIZE_X,
 								   BRICK_SIZE_Y);
 	
@@ -265,14 +268,17 @@
 	{
 		[self sprawdzKtoraToKostka:i];
 		
-		if (ballPoint.x >= brickPoint_begin.x && ballPoint.x <= brickPoint_end.x)
+		if (ballPoint.x + BALL_SQUARE >= brickPoint_begin.x &&
+			ballPoint.x + BALL_SQUARE <= brickPoint_end.x)
 		{
-			if (ballPoint.y >= brickPoint_begin.y && ballPoint.y <= brickPoint_end.y) // Góra/Dół
+			if (ballPoint.y + BALL_SQUARE >= brickPoint_begin.y &&
+				ballPoint.y + BALL_SQUARE <= brickPoint_end.y) // Góra/Dół
 			{
 				[self zniszczKostke:i];
 				y = -y;
 				
-				if (ballPoint.x <= brickPoint_begin.x || ballPoint.x >= brickPoint_end.x) // Lewa/Prawa
+				if (ballPoint.x + BALL_SQUARE <= brickPoint_begin.x ||
+					ballPoint.x + BALL_SQUARE >= brickPoint_end.x) // Lewa/Prawa
 				{
 					[self zniszczKostke:i];
 					x = -x;
@@ -369,6 +375,7 @@
 	[self createBall];
 	[self createTray];
 	[self createBrick];
+	[self createBrick2];
 	[self reset];
 	// -------------
 }
