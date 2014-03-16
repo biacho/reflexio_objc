@@ -21,6 +21,7 @@
 		6D793FCE16FA0833003A8FDA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D793FCD16FA0833003A8FDA /* ViewController.m */; };
 		6DA68A9F17005C3500CFAFFA /* BallView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DA68A9E17005C3500CFAFFA /* BallView.m */; };
 		6DA68AA2170063F900CFAFFA /* TrayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DA68AA1170063F900CFAFFA /* TrayView.m */; };
+		6DC5B8D1188BE1770076F2A1 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DC5B8CF188BE1770076F2A1 /* MainViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,8 @@
 		6DA68A9E17005C3500CFAFFA /* BallView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BallView.m; path = ../BallView.m; sourceTree = "<group>"; };
 		6DA68AA0170063F800CFAFFA /* TrayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrayView.h; path = Tray/TrayView.h; sourceTree = "<group>"; };
 		6DA68AA1170063F900CFAFFA /* TrayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrayView.m; path = Tray/TrayView.m; sourceTree = "<group>"; };
+		6DC5B8CE188BE1770076F2A1 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		6DC5B8CF188BE1770076F2A1 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +96,8 @@
 			isa = PBXGroup;
 			children = (
 				6D793FC916FA0833003A8FDA /* MainStoryboard.storyboard */,
+				6DC5B8CE188BE1770076F2A1 /* MainViewController.h */,
+				6DC5B8CF188BE1770076F2A1 /* MainViewController.m */,
 				6D793FCC16FA0833003A8FDA /* ViewController.h */,
 				6D793FCD16FA0833003A8FDA /* ViewController.m */,
 				6DA68A9D17005C3500CFAFFA /* BallView.h */,
@@ -150,6 +155,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Tobiasz Czelakowski";
+				TargetAttributes = {
+					6D793FAD16FA0832003A8FDA = {
+						DevelopmentTeam = PCCTY4F6PV;
+					};
+				};
 			};
 			buildConfigurationList = 6D793FA916FA0831003A8FDA /* Build configuration list for PBXProject "reflexio" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -192,6 +202,7 @@
 				6D793FC216FA0833003A8FDA /* AppDelegate.m in Sources */,
 				6D793FCE16FA0833003A8FDA /* ViewController.m in Sources */,
 				6DA68A9F17005C3500CFAFFA /* BallView.m in Sources */,
+				6DC5B8D1188BE1770076F2A1 /* MainViewController.m in Sources */,
 				6DA68AA2170063F900CFAFFA /* TrayView.m in Sources */,
 				6D70B4281701AFEF00C8D994 /* BrickView.m in Sources */,
 			);
@@ -278,10 +289,13 @@
 		6D793FD216FA0833003A8FDA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "reflexio/reflexio-Prefix.pch";
 				INFOPLIST_FILE = "reflexio/reflexio-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -289,10 +303,13 @@
 		6D793FD316FA0833003A8FDA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "reflexio/reflexio-Prefix.pch";
 				INFOPLIST_FILE = "reflexio/reflexio-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

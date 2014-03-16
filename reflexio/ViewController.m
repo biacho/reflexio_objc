@@ -13,27 +13,27 @@
 
 @interface ViewController ()
 {
-	IBOutlet UIView *backgroundView;
-	UIView *ball, *tray, *brick, *gameField;
+	//IBOutlet UIView *backgroundView;
+	UIView *ball, *tray, *gameField;
 	//IBOutlet UIView *gameField;
-	NSMutableArray *bricksArray;
+	NSMutableDictionary *bricksDictionary;
+	NSMutableArray *bricksViewArray;
 	CGPoint brickPoint_begin;
 	CGPoint brickPoint_end;
 	IBOutlet UILabel *scoreLabel;
-	int score;
+	IBOutlet UILabel *lifeLabel;
+	IBOutlet UILabel *countDownLabel;
+	BOOL hole;
+	int score, life, countTime;
 	double x,y;
-	BOOL play;
+	BOOL play, show;
 }
-
-
-- (IBAction)playAgain:(UIButton *)sender;
-
 @end
 
 #define BALL_SIZE 20
 #define BALL_SQUARE BALL_SIZE/2
 
-#define TRAY_SIZE_X 80 // 80
+#define TRAY_SIZE_X 80
 #define TRAY_SIZE_Y 20
 
 #define BRICK_SIZE_X 50 // 50
@@ -42,7 +42,6 @@
 #define SPEED 0.005
 #define REMOVE_TIME 0.01
 
-
 // Podział tacki na części, użyte w wybieraniu konta odbicia.
 #define SEKCJA1 TRAY_SIZE_X * 0.2 // 20%
 #define SEKCJA2 TRAY_SIZE_X * 0.2 // 20%
@@ -50,13 +49,28 @@
 
 @implementation ViewController
 
+// !!!: Buttons
+- (IBAction)startPlayButton:(UIButton *)sender
+{
+	NSLog(@"Naciśnięty :>");
+	//[self start];
+	//[sender setHidden:YES];
+}
 
+
+// !!!: GameField
 - (void)createGameField
 {
 	CGRect gameFieldRect = CGRectMake(0, 40, 320, 528);
 	gameField = [[UIView alloc] initWithFrame:gameFieldRect];
 	gameField.backgroundColor = [UIColor clearColor];
 	[self.view addSubview:gameField];
+	[self updateLabels];
+}
+
+- (void)updateLabels
+{
+	lifeLabel.text = [NSString stringWithFormat:@"Życie: %i", life];
 }
 // !!!: KULKA
 - (void)createBall
@@ -89,8 +103,17 @@
 		
 		if ([self przeszkoda:buffor])
 		{
-			[self sciana:buffor];
-			[self performSelector:@selector(moveBall) withObject:nil afterDelay:SPEED];
+			if (hole) // Żeby piłeczka nie przyśpieszała przy restartcie.
+			{
+				NSLog(@"Miss...");
+				hole = NO;
+			}
+			else
+			{
+				//NSLog(@"Przeszkoda");
+				[self sciana:buffor];
+				[self performSelector:@selector(moveBall) withObject:nil afterDelay:SPEED];
+			}
 		}
 		else
 		{
@@ -105,28 +128,31 @@
 {
 	if (x != 0 || y != 0)
 	{
-			if (ballPoint.x >= gameField.bounds.size.width || ballPoint.x <= 0) return YES;
-			else if (ballPoint.y >= tray.frame.origin.y || ballPoint.y <= 0) return YES;
+			if (ballPoint.x  >= gameField.bounds.size.width || ballPoint.x  <= 0) return YES;
+			else if (ballPoint.y  >= tray.frame.origin.y || ballPoint.y  <= 0) return YES;
+			else if (bricksDictionary.count == 0) return NO;
 			else
 			{
-				for (int i = 0; i < bricksArray.count; i++)
+				/*
+				for (int i = 0; i < bricksDictionary.count; i++)
 				{
-					[self sprawdzKtoraToKostka:i];
+				*/
+					[self sprawdzKtoraToKostka:ballPoint];
 					
-					if (ballPoint.x + BALL_SQUARE >= brickPoint_begin.x &&
-						ballPoint.x + BALL_SQUARE <= brickPoint_end.x)
+					if (ballPoint.x >= brickPoint_begin.x &&
+						ballPoint.x <= brickPoint_end.x)
 					{
-						//NSLog(@"Przestrzen kostki X");
-						if (ballPoint.y + BALL_SQUARE >= brickPoint_begin.y &&
-							ballPoint.y + BALL_SQUARE <= brickPoint_end.y)
+						if (ballPoint.y  >= brickPoint_begin.y &&
+							ballPoint.y  <= brickPoint_end.y)
 						{
-							//NSLog(@"Przestrzen kostki Y");
 							return YES;
 						}
 						return NO;
 					}
+				/*
 					else return NO;
 				}
+				*/
 				return NO;
 			}
 	}
@@ -187,6 +213,7 @@
 	}
 	else // Kostka
 	{
+		NSLog(@"Kostka");
 		[self kostka:point];
 	}
 	
@@ -233,78 +260,129 @@
 - (void)createBrick
 {
 	NSLog(@"I'm creating a Brick...");
-	CGRect brickFrame = CGRectMake(gameField.center.x - BRICK_SIZE_X/2,
+	CGRect brickFrame = CGRectMake(gameField.center.x - BRICK_SIZE_X/2 ,
 								  gameField.center.y - 100,
 								  BRICK_SIZE_X,
 								  BRICK_SIZE_Y);
 	
-	brick = [[BrickView alloc] initWithFrame:brickFrame];
-	[bricksArray addObject:brick];
+	UIView *brick = [[BrickView alloc] initWithFrame:brickFrame];
 	
+	double bx = brickFrame.origin.x ;//- BRICK_SIZE_X/2;
+	double by = brickFrame.origin.y;// - BRICK_SIZE_Y/2;
+	double ex = brickFrame.origin.x + BRICK_SIZE_X;
+	double ey = brickFrame.origin.y + BRICK_SIZE_Y;
+	
+	NSMutableDictionary *brick_Dic = [NSMutableDictionary dictionary];
+	[brick_Dic setObject:[NSNumber numberWithDouble:bx] forKey:@"begin_x"];
+	[brick_Dic setObject:[NSNumber numberWithDouble:by] forKey:@"begin_y"];
+	[brick_Dic setObject:[NSNumber numberWithDouble:ex] forKey:@"end_x"];
+	[brick_Dic setObject:[NSNumber numberWithDouble:ey] forKey:@"end_y"];
+
+	//NSLog(@"%@", brick_Dic);
+	
+	[bricksDictionary setObject:brick_Dic forKey:@"brick1"];
+	[bricksViewArray addObject:brick];
 	brick.opaque = NO;
 	[gameField addSubview:brick];
+	NSLog(@"bricksDictionary : %@", bricksDictionary);
+
 }
 
 - (void)createBrick2
 {
-	NSLog(@"I'm creating a Brick2...");
+	NSLog(@"I'm creating a Brick 2...");
 	
-	CGRect brickFrame = CGRectMake(gameField.center.x - BRICK_SIZE_X/2 + 50,
+	CGRect brickFrame = CGRectMake(gameField.center.x - BRICK_SIZE_X/2 + 20,
 								   gameField.center.y - 200,
 								   BRICK_SIZE_X,
 								   BRICK_SIZE_Y);
 	
 	
-	brick = [[BrickView alloc] initWithFrame:brickFrame];
-	[bricksArray addObject:brick];
+	UIView *brick = [[BrickView alloc] initWithFrame:brickFrame];
+	double bx = brickFrame.origin.x - BRICK_SIZE_X/2;
+	double by = brickFrame.origin.y - BRICK_SIZE_Y/2;
+	double ex = brickFrame.origin.x + BRICK_SIZE_X/2;
+	double ey = brickFrame.origin.y + BRICK_SIZE_Y/2;
+	
+	NSMutableDictionary *brick_Dic = [NSMutableDictionary dictionary];
+	[brick_Dic setObject:[NSNumber numberWithDouble:bx] forKey:@"begin_x"];
+	[brick_Dic setObject:[NSNumber numberWithDouble:by] forKey:@"begin_y"];
+	[brick_Dic setObject:[NSNumber numberWithDouble:ex] forKey:@"end_x"];
+	[brick_Dic setObject:[NSNumber numberWithDouble:ey] forKey:@"end_y"];
+	
+	//NSLog(@"%@", brick_Dic);
+	
+	[bricksDictionary setObject:brick_Dic forKey:@"brick2"];
+	
+	//[bricksDictionary addObject:brick];
 	
 	brick.opaque = NO;
 	[gameField addSubview:brick];
+	NSLog(@"bricksDictionary : %@", bricksDictionary);
+
 }
 
 - (void)kostka:(CGPoint)ballPoint
 {
-	for (int i = 0; i < bricksArray.count; i++)
+	NSLog(@"Inside Kostka");
+	
+	if (ballPoint.x  >= brickPoint_begin.x || ballPoint.x >= brickPoint_end.x) // Lewa/Prawa
 	{
-		[self sprawdzKtoraToKostka:i];
-		
-		if (ballPoint.x + BALL_SQUARE >= brickPoint_begin.x &&
-			ballPoint.x + BALL_SQUARE <= brickPoint_end.x)
+		[self zniszczKostke:@"brick1"];
+		if (ballPoint.y <= brickPoint_begin.y || ballPoint.y >= brickPoint_end.y)
 		{
-			if (ballPoint.y + BALL_SQUARE >= brickPoint_begin.y &&
-				ballPoint.y + BALL_SQUARE <= brickPoint_end.y) // Góra/Dół
-			{
-				[self zniszczKostke:i];
-				y = -y;
-				
-				if (ballPoint.x + BALL_SQUARE <= brickPoint_begin.x ||
-					ballPoint.x + BALL_SQUARE >= brickPoint_end.x) // Lewa/Prawa
-				{
-					[self zniszczKostke:i];
-					x = -x;
-					y = -y;
-				}
-			}
+			y = -y;
+		}
+		else
+		{
+			x = -x;
 		}
 	}
 }
-- (void)sprawdzKtoraToKostka:(int)i
+- (void)sprawdzKtoraToKostka:(CGPoint)ballPoint
 {
-	if (bricksArray.count >= 1)
+	//NSLog(@"kostka %i", i);
+	
+	double bx = [[[bricksDictionary objectForKey:@"brick1"] objectForKey:@"begin_x"] doubleValue];
+	double by = [[[bricksDictionary objectForKey:@"brick1"] objectForKey:@"begin_y"] doubleValue];
+	double ex = [[[bricksDictionary objectForKey:@"brick1"] objectForKey:@"end_x"] doubleValue];
+	double ey = [[[bricksDictionary objectForKey:@"brick1"] objectForKey:@"end_y"] doubleValue];
+	
+	
+	if (ballPoint.x  >= bx &&
+		ballPoint.x  <= ex)
 	{
-		UIView *brickViewTemp = [bricksArray objectAtIndex:i];
-		CGPoint brickPoint = CGPointMake(brickViewTemp.center.x, brickViewTemp.center.y);
-		brickPoint_begin = CGPointMake(brickPoint.x - BRICK_SIZE_X/2, brickPoint.y - BRICK_SIZE_Y/2);
-		brickPoint_end = CGPointMake(brickPoint.x + BRICK_SIZE_X/2, brickPoint.y + BRICK_SIZE_Y/2);
+		if (ballPoint.y  >= by &&
+			ballPoint.y  <= ey)
+		{
+			NSLog(@"+");
+			brickPoint_begin = CGPointMake(bx, by);
+			brickPoint_end = CGPointMake(ex, ey);
+		}
 	}
-	else
+	/*
+	else if (ballPoint.x - BALL_SQUARE >= bx && ballPoint.x  - BALL_SQUARE<= ex)
 	{
-		brickPoint_begin = brickPoint_end = CGPointZero;
+		if (ballPoint.y - BALL_SQUARE >= by && ballPoint.y -BALL_SQUARE <= ey)
+		{
+			NSLog(@"-");
+			brickPoint_begin = CGPointMake(bx, by);
+			brickPoint_end = CGPointMake(ex, ey);
+		}
 	}
+	*/
+	//UIView *brickViewTemp = [bricksDictionary objectAtIndex:i];
+	//CGPoint brickPoint = CGPointMake(brickViewTemp.center.x, brickViewTemp.center.y);
+	//brickPoint_begin = CGPointMake(brickPoint.x - BRICK_SIZE_X/2, brickPoint.y - BRICK_SIZE_Y/2);
+	//brickPoint_end = CGPointMake(brickPoint.x + BRICK_SIZE_X/2, brickPoint.y + BRICK_SIZE_Y/2);
 }
-- (void)zniszczKostke:(int)index
+- (void)zniszczKostke:(NSString*)index
 {
-	UIView *brickTemp = [bricksArray objectAtIndex:index];
+	index = @"0"; // Tymczasowo
+	
+	
+	UIView *brickTemp = [bricksViewArray objectAtIndex:[index doubleValue]];
+	NSLog(@"brickTemp = %@", brickTemp);
 	
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDelegate:self];
@@ -314,30 +392,39 @@
 	[UIView commitAnimations];
 	
 }
-- (void)wyczysc:(int)index
+- (void)wyczysc:(NSString*)index
 {
-	NSLog(@"index: %i", index);
-	NSLog(@"bricksArray: %i", bricksArray.count);
-	[[bricksArray objectAtIndex:index] removeFromSuperview];
-	[bricksArray removeObjectAtIndex:index];
-	NSLog(@"bricksArray after remove: %@", bricksArray);
+	index = @"brick1";
+	NSLog(@"index: %@", index);
+	NSLog(@"bricksDictionary: %lu", bricksDictionary.count);
+	[bricksDictionary removeObjectForKey:index];
+	NSLog(@"bricksDictionary after remove: %@", bricksDictionary);
 }
 
 // Set Section
 - (void)gameOver
 {
-	NSLog(@"Game Over!");
-	play = NO;
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.3f];
-	[UIView setAnimationDelegate:self];
-	backgroundView.hidden = NO;
-	//[self.view bringSubviewToFront:backgroundView]; // Żeby kulka się chowała podspodem.
-	backgroundView.alpha = 1.0f;
-	[ball removeFromSuperview];
-	[tray removeFromSuperview];
-	[UIView commitAnimations];
-
+	hole = YES;
+	
+	if (life == 0)
+	{
+		NSLog(@"Game Over!");
+		play = NO;
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.3f];
+		[UIView setAnimationDelegate:self];
+		x = 0;
+		y = 0;
+		[ball removeFromSuperview];
+		[tray removeFromSuperview];
+		[UIView commitAnimations];
+	}
+	else
+	{
+		--life;
+		[self updateLabels];
+		[self reset];
+	}
 }
 
 - (IBAction)playAgain:(UIButton *)sender
@@ -346,38 +433,95 @@
 	
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.3f];
-	//[UIView setAnimationDelay:2];
 	[UIView setAnimationDelegate:self];
-	[self createBall];
-	[self createTray];
-	backgroundView.alpha = 0.0f;
 	[self reset];
-	backgroundView.hidden = YES;
 	[UIView commitAnimations];
 }
-
+// ???: CZEMU TA PIERDOLONA PIŁECZKA PRZYŚPIESZA PO RESTARCIE !?
 - (void)reset
+{
+	[ball removeFromSuperview];
+	[tray removeFromSuperview];
+	x = 0; // Zmiana kierunku piłeczki na pierwotny prostopadły w dół
+	[self createBall];
+	[self createTray];
+	play = YES;
+	[self moveBall];
+}
+
+- (void)start
 {
 	x = 0;
 	y = 1;
 	play = YES;
 	[self moveBall];
 }
+
+- (void)countToStartAnimation
+{
+	if (countTime > 1)
+	{
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:1];
+		[UIView setAnimationDelegate:self];
+		[UIView setAnimationRepeatAutoreverses:YES];
+		countDownLabel.alpha = 1;
+		[UIView setAnimationDidStopSelector:@selector(countDownToStart)];
+		[UIView commitAnimations];
+	}
+	else if (countTime == 1)
+	{
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:1];
+		[UIView setAnimationDelegate:self];
+		[UIView setAnimationRepeatAutoreverses:YES];
+		countDownLabel.alpha = 1;
+		[UIView setAnimationDidStopSelector:@selector(countDownToStart)];
+		[UIView commitAnimations];
+		[self initialization];
+	}
+	else
+	{
+		[self start];
+	}
+}
+
+- (void)countDownToStart
+{
+	countDownLabel.alpha = 0;
+	countTime = [countDownLabel.text intValue];
+	countTime--;
+	countDownLabel.text = [NSString stringWithFormat:@"%i", countTime];
+	[self countToStartAnimation];
+}
+
+// TODO: Ustawić countDownLabel jako najwyżej w hierarchi, żeby kostka nie przykrywała 1 na ekranie.
+- (void)initialization
+{
+	// Inicjalizacja
+	bricksDictionary = [NSMutableDictionary dictionary];
+	bricksViewArray = [NSMutableArray array];
+	life = 2; // Ilość żyć
+	countTime = [countDownLabel.text intValue];
+	[self createGameField];
+	[self createBall];
+	[self createTray];
+	[self createBrick];
+	//[self createBrick2];
+	// -------------
+
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	[self countDownToStart];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	NSLog(@"reFlexio!");
-	
-	// Inicjalizacja
-	bricksArray = [[NSMutableArray alloc] init];
-	[self createGameField];
-	[self createBall];
-	[self createTray];
-	[self createBrick];
-	[self createBrick2];
-	[self reset];
-	// -------------
 }
 
 - (void)didReceiveMemoryWarning
