@@ -14,7 +14,7 @@
 @interface ViewController ()
 {
 	//IBOutlet UIView *backgroundView;
-	UIView *ball, *tray, *gameField;
+	UIView *ball, *tray, *gameField, *leftSideScreen;
 	//IBOutlet UIView *gameField;
 	NSMutableDictionary *bricksDictionary;
 	NSMutableArray *bricksViewArray;
@@ -517,9 +517,14 @@
 	[super viewDidAppear:animated];
 	[self countDownToStart];
 }
+
+// TODO: Wysuwanie się menu. Jak na razie jest ono dodane i działa. Trzeba zrobić UIView animation dla wysuwania się w momencie kiedy będzie PAUSA, albo GAME OVER.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	leftSideScreen = [[UIView alloc] init];
+	NSLog(@"Pozycja lewego menu: %f", leftSideScreen.frame.origin.x);
+	
 	// Do any additional setup after loading the view, typically from a nib.
 	NSLog(@"reFlexio!");
 }
