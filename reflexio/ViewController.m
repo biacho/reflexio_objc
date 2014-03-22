@@ -14,7 +14,7 @@
 @interface ViewController ()
 {
 	//IBOutlet UIView *backgroundView;
-	UIView *ball, *tray, *gameField, *leftSideScreen;
+	UIView *ball, *tray, *gameField, *brick;
 	//IBOutlet UIView *gameField;
 	NSMutableDictionary *bricksDictionary;
 	NSMutableArray *bricksViewArray;
@@ -27,6 +27,8 @@
 	int score, life, countTime;
 	double x,y;
 	BOOL play, show;
+	
+	IBOutlet UIView *leftSideScreenView;
 }
 @end
 
@@ -46,17 +48,11 @@
 #define SEKCJA1 TRAY_SIZE_X * 0.2 // 20%
 #define SEKCJA2 TRAY_SIZE_X * 0.2 // 20%
 
+#define LIFE 1
+#define SCORE 0
+
 
 @implementation ViewController
-
-// !!!: Buttons
-- (IBAction)startPlayButton:(UIButton *)sender
-{
-	NSLog(@"Naciśnięty :>");
-	//[self start];
-	//[sender setHidden:YES];
-}
-
 
 // !!!: GameField
 - (void)createGameField
@@ -65,12 +61,18 @@
 	gameField = [[UIView alloc] initWithFrame:gameFieldRect];
 	gameField.backgroundColor = [UIColor clearColor];
 	[self.view addSubview:gameField];
+	bricksDictionary = [NSMutableDictionary dictionary];
+	bricksViewArray = [NSMutableArray array];
 	[self updateLabels];
 }
 
 - (void)updateLabels
 {
+	life = LIFE;
+	score = SCORE;
+	//lifeLabel.text = [NSString stringWithFormat:@"🔴🔴🔴"];
 	lifeLabel.text = [NSString stringWithFormat:@"Życie: %i", life];
+	scoreLabel.text = [NSString stringWithFormat:@"Punkty: %05d", score];
 }
 // !!!: KULKA
 - (void)createBall
@@ -90,10 +92,12 @@
 {
 	if (play)
 	{
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:SPEED];
-		[UIView setAnimationDelegate:self];
+		//[UIView beginAnimations:nil context:nil];
+		//[UIView setAnimationDuration:SPEED];
+		//[UIView setAnimationDelegate:self];
 		
+		// Użyty blok do animacji :)
+		[UIView animateWithDuration: SPEED animations:^{
 		CGPoint ballPosition = CGPointMake(ball.center.x, ball.center.y);
 		CGPoint buffor;
 		buffor = ballPosition;
@@ -120,8 +124,9 @@
 			ball.center = buffor;
 			[self performSelector:@selector(moveBall) withObject:nil afterDelay:SPEED];
 		}
+		}];
 		
-		[UIView commitAnimations];
+		//[UIView commitAnimations];
 	}
 }
 - (BOOL)przeszkoda:(CGPoint)ballPoint
@@ -182,23 +187,26 @@
 					tray.frame.origin.x + TRAY_SIZE_X - SEKCJA1 < ball.center.x)
 				{
 					NSLog(@"Sekcja 1.");
-					x = kierunek * 3 * znak;
+					//x = kierunek * 3 * znak;
+					x = kierunek * znak;
 				}
 				else if (ball.center.x < tray.frame.origin.x + SEKCJA1 + SEKCJA2 ||
 						 tray.frame.origin.x + TRAY_SIZE_X - SEKCJA1 - SEKCJA2 < ball.center.x)
 				{
 					NSLog(@"Sekcja 2.");
-					x = kierunek * 1 * znak;
+					//x = kierunek * 1 * znak;
+					x = kierunek * znak;
 				}
 				else
 				{
 					NSLog(@"Sekcja 3.");
-					x = kierunek * 0.5 * znak;
+					//x = kierunek * 0.5 * znak;
+					x = kierunek * znak;
 				}
 				
 				y = -y;
 				score++;
-				scoreLabel.text = [NSString stringWithFormat:@"Punkty: %i", score];
+				scoreLabel.text = [NSString stringWithFormat:@"Punkty: %05d", score];
 			}
 			else
 			{
@@ -265,7 +273,7 @@
 								  BRICK_SIZE_X,
 								  BRICK_SIZE_Y);
 	
-	UIView *brick = [[BrickView alloc] initWithFrame:brickFrame];
+	brick = [[BrickView alloc] initWithFrame:brickFrame];
 	
 	double bx = brickFrame.origin.x ;//- BRICK_SIZE_X/2;
 	double by = brickFrame.origin.y;// - BRICK_SIZE_Y/2;
@@ -298,7 +306,7 @@
 								   BRICK_SIZE_Y);
 	
 	
-	UIView *brick = [[BrickView alloc] initWithFrame:brickFrame];
+	brick = [[BrickView alloc] initWithFrame:brickFrame];
 	double bx = brickFrame.origin.x - BRICK_SIZE_X/2;
 	double by = brickFrame.origin.y - BRICK_SIZE_Y/2;
 	double ex = brickFrame.origin.x + BRICK_SIZE_X/2;
@@ -404,23 +412,27 @@
 // Set Section
 - (void)gameOver
 {
-	hole = YES;
+	hole = NO;
 	
 	if (life == 0)
 	{
 		NSLog(@"Game Over!");
+		[self showHideLeftSideScreenView:YES];
+
+		countDownLabel.text = [NSString stringWithFormat:@"3"];
 		play = NO;
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.3f];
-		[UIView setAnimationDelegate:self];
-		x = 0;
-		y = 0;
+		x = 0,0;
+		y = 0,0;
+		life = 0;
+		scoreLabel.text = [NSString stringWithFormat:@"Punkty: %05d", SCORE];
 		[ball removeFromSuperview];
 		[tray removeFromSuperview];
-		[UIView commitAnimations];
+		[brick removeFromSuperview];
+		[gameField removeFromSuperview];
 	}
 	else
 	{
+		NSLog(@"wartosc x: %f i y: %f", x, y);
 		--life;
 		[self updateLabels];
 		[self reset];
@@ -429,30 +441,25 @@
 
 - (IBAction)playAgain:(UIButton *)sender
 {
-	NSLog(@"Start New Game!");
+	NSLog(@"Start Again!");
+	[self showHideLeftSideScreenView:NO];
+	[self countDownToStart];
 	
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.3f];
-	[UIView setAnimationDelegate:self];
-	[self reset];
-	[UIView commitAnimations];
 }
 // ???: CZEMU TA PIERDOLONA PIŁECZKA PRZYŚPIESZA PO RESTARCIE !?
 - (void)reset
 {
 	[ball removeFromSuperview];
 	[tray removeFromSuperview];
-	x = 0; // Zmiana kierunku piłeczki na pierwotny prostopadły w dół
 	[self createBall];
 	[self createTray];
-	play = YES;
-	[self moveBall];
+	[self start];
 }
 
 - (void)start
 {
-	x = 0;
-	y = 1;
+	x = 0,0;
+	y = 1,0;
 	play = YES;
 	[self moveBall];
 }
@@ -499,9 +506,6 @@
 - (void)initialization
 {
 	// Inicjalizacja
-	bricksDictionary = [NSMutableDictionary dictionary];
-	bricksViewArray = [NSMutableArray array];
-	life = 2; // Ilość żyć
 	countTime = [countDownLabel.text intValue];
 	[self createGameField];
 	[self createBall];
@@ -509,7 +513,34 @@
 	[self createBrick];
 	//[self createBrick2];
 	// -------------
+	
 
+
+}
+
+// Boczne Menu
+- (void)showHideLeftSideScreenView:(BOOL)menu
+{
+	if (menu)
+	{
+		CGRect newFrame = CGRectMake(0, 0,
+									 leftSideScreenView.frame.size.width,
+									 leftSideScreenView.frame.size.height);
+		[UIView animateWithDuration: 1.0 animations:^{
+			leftSideScreenView.frame = newFrame;
+		}];
+		
+		[self.view bringSubviewToFront:leftSideScreenView];
+	}
+	else
+	{
+		CGRect newFrame = CGRectMake(-125, 0,
+									 leftSideScreenView.frame.size.width,
+									 leftSideScreenView.frame.size.height);
+		[UIView animateWithDuration: 2.0 animations:^{
+			leftSideScreenView.frame = newFrame;
+		}];
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -518,12 +549,10 @@
 	[self countDownToStart];
 }
 
-// TODO: Wysuwanie się menu. Jak na razie jest ono dodane i działa. Trzeba zrobić UIView animation dla wysuwania się w momencie kiedy będzie PAUSA, albo GAME OVER.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	leftSideScreen = [[UIView alloc] init];
-	NSLog(@"Pozycja lewego menu: %f", leftSideScreen.frame.origin.x);
+	countDownLabel.text = [NSString stringWithFormat:@"3"];
 	
 	// Do any additional setup after loading the view, typically from a nib.
 	NSLog(@"reFlexio!");
